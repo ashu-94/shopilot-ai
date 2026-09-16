@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: shopilot-migrate
+  namespace: shopilot
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: migrate
+        image: ghcr.io/REPLACE_OWNER/shopilot-backend:REPLACE_TAG
+        command:
+        - alembic
+        - upgrade
+        - head
+        envFrom:
+        - configMapRef:
+            name: shopilot-config
+        - secretRef:
+            name: shopilot-secrets

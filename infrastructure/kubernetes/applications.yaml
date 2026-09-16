@@ -1,0 +1,603 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: shopilot
+spec:
+  replicas: 2
+  selector:
+    matchLabels: &id001
+      app: backend
+  template:
+    metadata:
+      labels: *id001
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: backend
+        image: ghcr.io/REPLACE_OWNER/shopilot-backend:REPLACE_TAG
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+        envFrom:
+        - configMapRef:
+            name: shopilot-config
+        - secretRef:
+            name: shopilot-secrets
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: shopilot
+spec:
+  selector:
+    app: backend
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: shopilot
+spec:
+  replicas: 1
+  selector:
+    matchLabels: &id001
+      app: frontend
+  template:
+    metadata:
+      labels: *id001
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: frontend
+        image: ghcr.io/REPLACE_OWNER/shopilot-frontend:REPLACE_TAG
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 1000m
+            memory: 256Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - NET_RAW
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: shopilot
+spec:
+  selector:
+    app: frontend
+  ports:
+  - port: 80
+    targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-product
+  namespace: shopilot
+spec:
+  replicas: 1
+  selector:
+    matchLabels: &id001
+      app: mcp-product
+  template:
+    metadata:
+      labels: *id001
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: mcp-product
+        image: ghcr.io/REPLACE_OWNER/shopilot-backend:REPLACE_TAG
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+        envFrom:
+        - configMapRef:
+            name: shopilot-config
+        - secretRef:
+            name: shopilot-secrets
+        command:
+        - python
+        - -m
+        - mcp_servers.server
+        env:
+        - name: MCP_SERVICE
+          value: product
+        readinessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-product
+  namespace: shopilot
+spec:
+  selector:
+    app: mcp-product
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-inventory
+  namespace: shopilot
+spec:
+  replicas: 1
+  selector:
+    matchLabels: &id001
+      app: mcp-inventory
+  template:
+    metadata:
+      labels: *id001
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: mcp-inventory
+        image: ghcr.io/REPLACE_OWNER/shopilot-backend:REPLACE_TAG
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+        envFrom:
+        - configMapRef:
+            name: shopilot-config
+        - secretRef:
+            name: shopilot-secrets
+        command:
+        - python
+        - -m
+        - mcp_servers.server
+        env:
+        - name: MCP_SERVICE
+          value: inventory
+        readinessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-inventory
+  namespace: shopilot
+spec:
+  selector:
+    app: mcp-inventory
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-order
+  namespace: shopilot
+spec:
+  replicas: 1
+  selector:
+    matchLabels: &id001
+      app: mcp-order
+  template:
+    metadata:
+      labels: *id001
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: mcp-order
+        image: ghcr.io/REPLACE_OWNER/shopilot-backend:REPLACE_TAG
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+        envFrom:
+        - configMapRef:
+            name: shopilot-config
+        - secretRef:
+            name: shopilot-secrets
+        command:
+        - python
+        - -m
+        - mcp_servers.server
+        env:
+        - name: MCP_SERVICE
+          value: order
+        readinessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-order
+  namespace: shopilot
+spec:
+  selector:
+    app: mcp-order
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-payment
+  namespace: shopilot
+spec:
+  replicas: 1
+  selector:
+    matchLabels: &id001
+      app: mcp-payment
+  template:
+    metadata:
+      labels: *id001
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: mcp-payment
+        image: ghcr.io/REPLACE_OWNER/shopilot-backend:REPLACE_TAG
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+        envFrom:
+        - configMapRef:
+            name: shopilot-config
+        - secretRef:
+            name: shopilot-secrets
+        command:
+        - python
+        - -m
+        - mcp_servers.server
+        env:
+        - name: MCP_SERVICE
+          value: payment
+        readinessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-payment
+  namespace: shopilot
+spec:
+  selector:
+    app: mcp-payment
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-shipping
+  namespace: shopilot
+spec:
+  replicas: 1
+  selector:
+    matchLabels: &id001
+      app: mcp-shipping
+  template:
+    metadata:
+      labels: *id001
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: mcp-shipping
+        image: ghcr.io/REPLACE_OWNER/shopilot-backend:REPLACE_TAG
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+        envFrom:
+        - configMapRef:
+            name: shopilot-config
+        - secretRef:
+            name: shopilot-secrets
+        command:
+        - python
+        - -m
+        - mcp_servers.server
+        env:
+        - name: MCP_SERVICE
+          value: shipping
+        readinessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-shipping
+  namespace: shopilot
+spec:
+  selector:
+    app: mcp-shipping
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-customer
+  namespace: shopilot
+spec:
+  replicas: 1
+  selector:
+    matchLabels: &id001
+      app: mcp-customer
+  template:
+    metadata:
+      labels: *id001
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: mcp-customer
+        image: ghcr.io/REPLACE_OWNER/shopilot-backend:REPLACE_TAG
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+        envFrom:
+        - configMapRef:
+            name: shopilot-config
+        - secretRef:
+            name: shopilot-secrets
+        command:
+        - python
+        - -m
+        - mcp_servers.server
+        env:
+        - name: MCP_SERVICE
+          value: customer
+        readinessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-customer
+  namespace: shopilot
+spec:
+  selector:
+    app: mcp-customer
+  ports:
+  - port: 8000
+    targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-coupon
+  namespace: shopilot
+spec:
+  replicas: 1
+  selector:
+    matchLabels: &id001
+      app: mcp-coupon
+  template:
+    metadata:
+      labels: *id001
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: mcp-coupon
+        image: ghcr.io/REPLACE_OWNER/shopilot-backend:REPLACE_TAG
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          runAsNonRoot: true
+          runAsUser: 1000
+        envFrom:
+        - configMapRef:
+            name: shopilot-config
+        - secretRef:
+            name: shopilot-secrets
+        command:
+        - python
+        - -m
+        - mcp_servers.server
+        env:
+        - name: MCP_SERVICE
+          value: coupon
+        readinessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-coupon
+  namespace: shopilot
+spec:
+  selector:
+    app: mcp-coupon
+  ports:
+  - port: 8000
+    targetPort: 8000

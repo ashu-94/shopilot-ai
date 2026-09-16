@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shopilot-config
+  namespace: shopilot
+data:
+  APP_ENV: production
+  SEED_DEMO: 'false'
+  MCP_TRANSPORT: http
+  MCP_HOST: mcp
+  REDIS_URL: redis://redis.platform.svc.cluster.local:6379/0
+  QDRANT_URL: http://qdrant.platform.svc.cluster.local:6333
+  KAFKA_BOOTSTRAP_SERVERS: kafka.platform.svc.cluster.local:9092
+  LLM_PROVIDER: deterministic
+  LANGSMITH_TRACING: 'false'
+  CORS_ORIGINS: '["https://shopilot.example.com"]'
