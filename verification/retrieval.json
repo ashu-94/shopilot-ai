@@ -1,0 +1,132 @@
+{
+  "cases": 24,
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "reranker_model": "Xenova/ms-marco-MiniLM-L-12-v2",
+  "mrr_at_8": 0.8903,
+  "recall_at_3": 0.9583,
+  "elapsed_seconds": 3.98,
+  "passed": true,
+  "records": [
+    {
+      "query": "backup power during an outage",
+      "rank": 1,
+      "top_id": "0"
+    },
+    {
+      "query": "comfortable seat for long work sessions",
+      "rank": 1,
+      "top_id": "1"
+    },
+    {
+      "query": "carry my computer on a daily commute",
+      "rank": 1,
+      "top_id": "2"
+    },
+    {
+      "query": "keep running containers without running out of memory",
+      "rank": 1,
+      "top_id": "3"
+    },
+    {
+      "query": "screen that connects using a reversible cable",
+      "rank": 1,
+      "top_id": "4"
+    },
+    {
+      "query": "type without waking someone",
+      "rank": 3,
+      "top_id": "7"
+    },
+    {
+      "query": "avoid tangled cables on my desk",
+      "rank": 5,
+      "top_id": "12"
+    },
+    {
+      "query": "listen without hearing the room around me",
+      "rank": 1,
+      "top_id": "7"
+    },
+    {
+      "query": "replace a purchase that arrived broken",
+      "rank": 1,
+      "top_id": "8"
+    },
+    {
+      "query": "how long will defects be covered",
+      "rank": 1,
+      "top_id": "9"
+    },
+    {
+      "query": "fit many development projects on disk",
+      "rank": 2,
+      "top_id": "3"
+    },
+    {
+      "query": "speak clearly during remote meetings",
+      "rank": 1,
+      "top_id": "11"
+    },
+    {
+      "query": "change between sitting and standing",
+      "rank": 1,
+      "top_id": "12"
+    },
+    {
+      "query": "connect a display with high refresh rate",
+      "rank": 1,
+      "top_id": "13"
+    },
+    {
+      "query": "save money on a complete purchase",
+      "rank": 1,
+      "top_id": "14"
+    },
+    {
+      "query": "when will the parcel arrive",
+      "rank": 1,
+      "top_id": "15"
+    },
+    {
+      "query": "return just one item from several purchased",
+      "rank": 1,
+      "top_id": "16"
+    },
+    {
+      "query": "who must authorize the team purchase",
+      "rank": 1,
+      "top_id": "17"
+    },
+    {
+      "query": "what happens if the charge fails",
+      "rank": 3,
+      "top_id": "0"
+    },
+    {
+      "query": "avoid paying twice after retrying",
+      "rank": 1,
+      "top_id": "19"
+    },
+    {
+      "query": "fan sounds distracting while I work",
+      "rank": 1,
+      "top_id": "20"
+    },
+    {
+      "query": "can this drive demanding local language models",
+      "rank": 1,
+      "top_id": "21"
+    },
+    {
+      "query": "prove where the recommendation came from",
+      "rank": 1,
+      "top_id": "22"
+    },
+    {
+      "query": "recover a request after a server interruption",
+      "rank": 1,
+      "top_id": "23"
+    }
+  ],
+  "limits": "Authored English paraphrase regression set, not independent production relevance or fraud validation."
+}

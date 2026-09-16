@@ -1,0 +1,284 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\Ashutosh\\Documents\\Codex\\2026-09-15\\c\\outputs\\shopilot-ai\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test"
+    ],
+    "configFile": "C:\\Users\\Ashutosh\\Documents\\Codex\\2026-09-15\\c\\outputs\\shopilot-ai\\frontend\\playwright.config.ts",
+    "rootDir": "C:/Users/Ashutosh/Documents/Codex/2026-09-15/c/outputs/shopilot-ai/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/Ashutosh/Documents/Codex/2026-09-15/c/outputs/shopilot-ai/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "C:/Users/Ashutosh/Documents/Codex/2026-09-15/c/outputs/shopilot-ai/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 300000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "../verification/accessibility.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "accessibility.spec.ts",
+      "file": "accessibility.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "WCAG AA scan of public, customer and admin screens",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6586,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "Scanning /\n"
+                    },
+                    {
+                      "text": "Scanning /shop\n"
+                    },
+                    {
+                      "text": "Scanning /products/product-001\n"
+                    },
+                    {
+                      "text": "Scanning /login\n"
+                    },
+                    {
+                      "text": "Scanning /missions\n"
+                    },
+                    {
+                      "text": "Scanning /cart\n"
+                    },
+                    {
+                      "text": "Scanning /checkout\n"
+                    },
+                    {
+                      "text": "Scanning /orders\n"
+                    },
+                    {
+                      "text": "Scanning /returns\n"
+                    },
+                    {
+                      "text": "Scanning /support\n"
+                    },
+                    {
+                      "text": "Scanning /approvals\n"
+                    },
+                    {
+                      "text": "Scanning /compare\n"
+                    },
+                    {
+                      "text": "Scanning /procurement\n"
+                    },
+                    {
+                      "text": "Scanning /operations\n"
+                    },
+                    {
+                      "text": "Scanning /admin\n"
+                    },
+                    {
+                      "text": "Axe issue groups \u001b[33m0\u001b[39m\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-16T01:36:13.259Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "axe-findings",
+                      "contentType": "application/json",
+                      "body": "W10="
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ddd864604af8a6a0198f-5c19aa0046d6ad1847aa",
+          "file": "accessibility.spec.ts",
+          "line": 5,
+          "column": 1
+        },
+        {
+          "title": "mobile keyboard navigation returns focus and has no horizontal overflow",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 845,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-16T01:36:20.065Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ddd864604af8a6a0198f-05a52ab4d86bf18a312a",
+          "file": "accessibility.spec.ts",
+          "line": 77,
+          "column": 1
+        },
+        {
+          "title": "layout reflows at 200 percent equivalent viewport",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 264,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-16T01:36:20.917Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ddd864604af8a6a0198f-222e6379904c36ff72f3",
+          "file": "accessibility.spec.ts",
+          "line": 98,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "commerce.spec.ts",
+      "file": "commerce.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "item return can be reviewed and approved through the UI",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2959,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-16T01:36:21.198Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8109404adeb653b0236f-9b419ca5e06581969e2d",
+          "file": "commerce.spec.ts",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-16T01:36:12.765Z",
+    "duration": 11470.74,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

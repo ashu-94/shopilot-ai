@@ -1,0 +1,7 @@
+{
+  "verified": false,
+  "exit_code": 1,
+  "error": "WARNING: Error loading config file: open C:\\Users\\Ashutosh\\.docker\\config.json: Access is denied.\npermission denied while trying to connect to the docker API at npipe:////./pipe/docker_engine",
+  "checked_at": 1789496486.9645128,
+  "compose_configuration": "validated development, verification and production overlays"
+}

@@ -1,0 +1,11 @@
+{
+  "requests": 200,
+  "concurrency": 8,
+  "elapsed_seconds": 1.686,
+  "requests_per_second": 118.65,
+  "p50_ms": 20.09,
+  "p95_ms": 185.76,
+  "errors": 0,
+  "scope": "Local API read load; does not certify production write throughput or distributed failover.",
+  "passed": true
+}
