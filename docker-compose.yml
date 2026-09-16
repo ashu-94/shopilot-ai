@@ -1,0 +1,167 @@
+name: shopilot
+x-backend: &backend
+  build:
+    context: .
+    dockerfile: infrastructure/docker/backend.Dockerfile
+  environment: &environment
+    DATABASE_URL: postgresql+psycopg://shopilot:${POSTGRES_PASSWORD:-shopilot-local-demo}@postgres:5432/shopilot
+    CHECKPOINT_URL: postgresql://shopilot:${POSTGRES_PASSWORD:-shopilot-local-demo}@postgres:5432/shopilot
+    REDIS_URL: redis://redis:6379/0
+    QDRANT_URL: http://qdrant:6333
+    RETRIEVAL_BACKEND: ${RETRIEVAL_BACKEND:-learned}
+    MODEL_CACHE_DIR: /app/data/models
+    KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    MCP_TRANSPORT: http
+    MCP_HOST: mcp
+    JWT_SECRET: ${JWT_SECRET:-local-demo-only-change-this-32-character-secret}
+    DEMO_PASSWORD: ${DEMO_PASSWORD:-ShopPilot-demo-2026!}
+    APP_ENV: development
+    SEED_DEMO: "true"
+    LLM_PROVIDER: ${LLM_PROVIDER:-deterministic}
+    LLM_API_KEY: ${LLM_API_KEY:-}
+    LLM_BASE_URL: ${LLM_BASE_URL:-https://api.openai.com/v1}
+    LLM_FAST_MODEL: ${LLM_FAST_MODEL:-gpt-4.1-mini}
+    LLM_ADVANCED_MODEL: ${LLM_ADVANCED_MODEL:-gpt-4.1}
+    LANGSMITH_TRACING: ${LANGSMITH_TRACING:-false}
+    LANGSMITH_API_KEY: ${LANGSMITH_API_KEY:-}
+    LANGSMITH_PROJECT: shopilot-ai
+    OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+    S3_ENDPOINT_URL: http://minio:9000
+    AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER:-shopilot-demo}
+    AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:-shopilot-local-storage-demo}
+  volumes: ["app-data:/app/data"]
+  security_opt: ["no-new-privileges:true"]
+  cap_drop: ["ALL"]
+  restart: unless-stopped
+  depends_on:
+    migrate: {condition: service_completed_successfully}
+
+services:
+  frontend:
+    build: {context: ., dockerfile: infrastructure/docker/frontend.Dockerfile}
+    ports: ["127.0.0.1:5173:80"]
+    depends_on: {backend: {condition: service_healthy}}
+    restart: unless-stopped
+  backend:
+    <<: *backend
+    ports: ["127.0.0.1:8000:8000"]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      kafka: {condition: service_healthy}
+      mcp-product: {condition: service_started}
+      mcp-inventory: {condition: service_started}
+      mcp-order: {condition: service_started}
+      mcp-payment: {condition: service_started}
+      mcp-shipping: {condition: service_started}
+      mcp-customer: {condition: service_started}
+      mcp-coupon: {condition: service_started}
+  migrate:
+    <<: *backend
+    restart: "no"
+    command: ["sh", "-c", "alembic upgrade head && python -m backend.bootstrap"]
+    healthcheck: {disable: true}
+    depends_on:
+      postgres: {condition: service_healthy}
+      qdrant: {condition: service_started}
+      redis: {condition: service_healthy}
+  mcp-product:
+    <<: *backend
+    environment: {<<: *environment, MCP_SERVICE: product}
+    command: ["python", "-m", "mcp_servers.server"]
+    healthcheck: {disable: true}
+  mcp-inventory:
+    <<: *backend
+    environment: {<<: *environment, MCP_SERVICE: inventory}
+    command: ["python", "-m", "mcp_servers.server"]
+    healthcheck: {disable: true}
+  mcp-order:
+    <<: *backend
+    environment: {<<: *environment, MCP_SERVICE: order}
+    command: ["python", "-m", "mcp_servers.server"]
+    healthcheck: {disable: true}
+  mcp-payment:
+    <<: *backend
+    environment: {<<: *environment, MCP_SERVICE: payment}
+    command: ["python", "-m", "mcp_servers.server"]
+    healthcheck: {disable: true}
+  mcp-shipping:
+    <<: *backend
+    environment: {<<: *environment, MCP_SERVICE: shipping}
+    command: ["python", "-m", "mcp_servers.server"]
+    healthcheck: {disable: true}
+  mcp-customer:
+    <<: *backend
+    environment: {<<: *environment, MCP_SERVICE: customer}
+    command: ["python", "-m", "mcp_servers.server"]
+    healthcheck: {disable: true}
+  mcp-coupon:
+    <<: *backend
+    environment: {<<: *environment, MCP_SERVICE: coupon}
+    command: ["python", "-m", "mcp_servers.server"]
+    healthcheck: {disable: true}
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: shopilot
+      POSTGRES_USER: shopilot
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-shopilot-local-demo}
+    volumes: ["postgres-data:/var/lib/postgresql/data"]
+    healthcheck: {test: ["CMD-SHELL", "pg_isready -U shopilot"], interval: 5s, timeout: 3s, retries: 20}
+  redis:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    volumes: ["redis-data:/data"]
+    healthcheck: {test: ["CMD", "redis-cli", "ping"], interval: 5s, timeout: 3s, retries: 10}
+  qdrant:
+    image: qdrant/qdrant:v1.13.6
+    volumes: ["qdrant-data:/qdrant/storage"]
+  kafka:
+    image: apache/kafka:3.9.1
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+    volumes: ["kafka-data:/var/lib/kafka/data"]
+    healthcheck: {test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list"], interval: 15s, timeout: 10s, retries: 20}
+  minio:
+    image: minio/minio:RELEASE.2025-04-22T22-12-26Z
+    command: server /data --console-address ':9001'
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-shopilot-demo}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-shopilot-local-storage-demo}
+    ports: ["127.0.0.1:9001:9001"]
+    volumes: ["minio-data:/data"]
+  prometheus:
+    image: prom/prometheus:v3.2.1
+    volumes: ["./infrastructure/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro", "prometheus-data:/prometheus"]
+    ports: ["127.0.0.1:9090:9090"]
+  grafana:
+    image: grafana/grafana:11.6.0
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-shopilot-local-grafana}
+    ports: ["127.0.0.1:3000:3000"]
+    volumes: ["grafana-data:/var/lib/grafana", "./infrastructure/monitoring/grafana:/etc/grafana/provisioning:ro"]
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.123.0
+    command: ["--config=/etc/otel/config.yaml"]
+    volumes: ["./infrastructure/monitoring/otel.yml:/etc/otel/config.yaml:ro"]
+
+volumes:
+  app-data:
+  postgres-data:
+  redis-data:
+  qdrant-data:
+  kafka-data:
+  minio-data:
+  prometheus-data:
+  grafana-data:

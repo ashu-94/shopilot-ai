@@ -1,0 +1,107 @@
+# Usage: docker compose --env-file .env.production -f docker-compose.yml -f docker-compose.production.yml up -d --build
+x-production: &production
+  APP_ENV: production
+  SEED_DEMO: "false"
+  JWT_SECRET: ${JWT_SECRET:?Set a strong unique JWT_SECRET}
+  DATABASE_URL: postgresql+psycopg://shopilot:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@postgres:5432/shopilot
+  CHECKPOINT_URL: postgresql://shopilot:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}@postgres:5432/shopilot
+  REDIS_URL: redis://:${REDIS_PASSWORD:?Set REDIS_PASSWORD}@redis:6379/0
+  RETRIEVAL_BACKEND: learned
+  ALLOWED_HOSTS: '["${PUBLIC_HOST:?Set PUBLIC_HOST}","backend","localhost","127.0.0.1"]'
+  CORS_ORIGINS: '["https://${PUBLIC_HOST:?Set PUBLIC_HOST}"]'
+  AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER:?Set MINIO_ROOT_USER}
+  AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:?Set MINIO_ROOT_PASSWORD}
+  SPECIALIST_MODELS_ENABLED: ${SPECIALIST_MODELS_ENABLED:-false}
+services:
+  backend:
+    environment:
+      <<: *production
+    ports: !reset []
+    mem_limit: 2g
+    cpus: 2
+    pids_limit: 128
+  migrate:
+    environment:
+      <<: *production
+    mem_limit: 2g
+    cpus: 2
+    pids_limit: 128
+  mcp-product:
+    environment:
+      <<: *production
+      MCP_SERVICE: product
+    mem_limit: 2g
+    cpus: 2
+    pids_limit: 128
+  mcp-inventory:
+    environment:
+      <<: *production
+      MCP_SERVICE: inventory
+    mem_limit: 2g
+    cpus: 2
+    pids_limit: 128
+  mcp-order:
+    environment:
+      <<: *production
+      MCP_SERVICE: order
+    mem_limit: 2g
+    cpus: 2
+    pids_limit: 128
+  mcp-payment:
+    environment:
+      <<: *production
+      MCP_SERVICE: payment
+    mem_limit: 2g
+    cpus: 2
+    pids_limit: 128
+  mcp-shipping:
+    environment:
+      <<: *production
+      MCP_SERVICE: shipping
+    mem_limit: 2g
+    cpus: 2
+    pids_limit: 128
+  mcp-customer:
+    environment:
+      <<: *production
+      MCP_SERVICE: customer
+    mem_limit: 2g
+    cpus: 2
+    pids_limit: 128
+  mcp-coupon:
+    environment:
+      <<: *production
+      MCP_SERVICE: coupon
+    mem_limit: 2g
+    cpus: 2
+    pids_limit: 128
+  redis:
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "noeviction", "--requirepass", "${REDIS_PASSWORD:?Set REDIS_PASSWORD}"]
+    environment:
+      REDISCLI_AUTH: ${REDIS_PASSWORD:?Set REDIS_PASSWORD}
+  postgres:
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD:?Set POSTGRES_ADMIN_PASSWORD}
+      APP_DATABASE_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+    volumes:
+      - ./infrastructure/docker/01-app-role.sh:/docker-entrypoint-initdb.d/01-app-role.sh:ro
+  minio:
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?Set MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?Set MINIO_ROOT_PASSWORD}
+  grafana:
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:?Set GRAFANA_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+  edge:
+    image: caddy:2.10-alpine
+    environment:
+      PUBLIC_HOST: ${PUBLIC_HOST:?Set PUBLIC_HOST}
+    ports: ["80:80", "443:443"]
+    volumes: ["./infrastructure/docker/Caddyfile:/etc/caddy/Caddyfile:ro", "caddy-data:/data", "caddy-config:/config"]
+    depends_on: [frontend]
+    restart: unless-stopped
+volumes:
+  caddy-data:
+  caddy-config:
