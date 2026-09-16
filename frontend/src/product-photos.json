@@ -1,0 +1,140 @@
+{
+  "product-001": {
+    "src": "/images/products/product-001.jpg",
+    "source": "https://www.pexels.com/photo/4884111/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-002": {
+    "src": "/images/products/product-002.jpg",
+    "source": "https://www.pexels.com/photo/15940010/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-003": {
+    "src": "/images/products/product-003.jpg",
+    "source": "https://www.pexels.com/photo/5872788/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-004": {
+    "src": "/images/products/product-004.jpg",
+    "source": "https://www.pexels.com/photo/326511/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-005": {
+    "src": "/images/products/product-005.jpg",
+    "source": "https://www.pexels.com/photo/13988977/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-006": {
+    "src": "/images/products/product-006.jpg",
+    "source": "https://www.pexels.com/photo/6044928/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-007": {
+    "src": "/images/products/product-007.jpg",
+    "source": "https://www.pexels.com/photo/6044919/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-008": {
+    "src": "/images/products/product-008.jpg",
+    "source": "https://www.pexels.com/photo/5152261/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-009": {
+    "src": "/images/products/product-009.jpg",
+    "source": "https://www.pexels.com/photo/20475584/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-010": {
+    "src": "/images/products/product-010.jpg",
+    "source": "https://www.pexels.com/photo/11889663/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-011": {
+    "src": "/images/products/product-011.jpg",
+    "source": "https://www.pexels.com/photo/5931186/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-012": {
+    "src": "/images/products/product-012.jpg",
+    "source": "https://gs-com.bz/products/apc-850va-backup-ups",
+    "license": "Retailer product image; commercial reuse permission not verified",
+    "licenseUrl": "https://gs-com.bz/products/apc-850va-backup-ups"
+  },
+  "product-013": {
+    "src": "/images/products/product-013.jpg",
+    "source": "https://gs-com.bz/products/apc-850va-backup-ups",
+    "license": "Retailer product image; commercial reuse permission not verified",
+    "licenseUrl": "https://gs-com.bz/products/apc-850va-backup-ups"
+  },
+  "product-014": {
+    "src": "/images/products/product-014.jpg",
+    "source": "https://www.pexels.com/photo/27559523/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-015": {
+    "src": "/images/products/product-015.jpg",
+    "source": "https://www.pexels.com/photo/13162095/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-016": {
+    "src": "/images/products/product-016.jpg",
+    "source": "https://www.pexels.com/photo/7054716/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-017": {
+    "src": "/images/products/product-017.jpg",
+    "source": "https://www.pexels.com/photo/7504896/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-018": {
+    "src": "/images/products/product-018.jpg",
+    "source": "https://www.pexels.com/photo/6020432/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-019": {
+    "src": "/images/products/product-019.jpg",
+    "source": "https://www.pexels.com/photo/6020432/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-020": {
+    "src": "/images/products/product-020.jpg",
+    "source": "https://www.pexels.com/photo/6020432/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-021": {
+    "src": "/images/products/product-021.jpg",
+    "source": "https://www.pexels.com/photo/10164899/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-022": {
+    "src": "/images/products/product-022.jpg",
+    "source": "https://www.pexels.com/photo/4700384/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  },
+  "product-023": {
+    "src": "/images/products/product-023.jpg",
+    "source": "https://www.pexels.com/photo/7172701/",
+    "license": "Pexels License",
+    "licenseUrl": "https://www.pexels.com/license/"
+  }
+}
