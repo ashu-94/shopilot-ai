@@ -1,0 +1,32 @@
+name: Bug report
+description: Report a reproducible application problem using synthetic data.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: "For security vulnerabilities, follow SECURITY.md. Do not include tokens, passwords or customer data."
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+      description: Include the affected user journey.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Use demo accounts and synthetic inputs.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Revision and environment
+      placeholder: "Commit, OS, browser, local or Docker profile"
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized logs or screenshots
